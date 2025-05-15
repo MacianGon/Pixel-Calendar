@@ -1,0 +1,412 @@
+/* Resets y Variables */
+:root {
+  --libro-ancho: 1200px;
+  --libro-alto: 850px;
+  --color-principal: #531d12;
+  --color-secundario: #6d2116;
+  --color-fondo: #fff2e2;
+  --color-fondo-notas: rgba(224, 203, 181, 0.6);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilos Generales */
+body {
+  font-family: 'Press Start 2P', cursive;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background-image: url('../img/fondo.png'); /* Ajusta la ruta si es necesario */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Contenedor Principal */
+main.contenedor-principal {
+  width: var(--libro-ancho);
+  height: var(--libro-alto);
+  position: relative;
+}
+
+img.libro {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10; /* Aseguramos que el z-index del libro sea menor */
+}
+
+/* Contenido (Calendario y Notas) */
+.contenido-libro {
+  position: absolute;
+  top: 25%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  z-index: 20;
+  display: none; /* Oculto inicialmente hasta que el usuario inicie sesión */
+}
+
+/* Sección Calendario */
+section.pagina-calendario {
+  width: 50%;
+  height: 100%;
+  padding-left: 20%;
+  padding-right: 20%;
+  box-sizing: border-box;
+}
+
+/* Sección Notas */
+section.pagina-notas {
+  width: 29%;
+  height: 85%;
+  background-color: var(--color-fondo-notas);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+/* Contenido Interno Calendario */
+.seccion-calendario {
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.3s ease-in-out;
+  height: 100%;
+}
+
+/* Cabecera Año */
+#cabecera-ano {
+  text-align: center;
+  color: var(--color-principal);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 0px var(--color-fondo);
+}
+
+/* Cabecera Mes */
+.cabecera-mes {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  color: var(--color-secundario);
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 0px var(--color-fondo);
+}
+
+.flecha {
+  cursor: pointer;
+  margin: 0 1rem;
+  color: var(--color-principal);
+  font-size: 1.2rem;
+  text-shadow: 2px 2px 0px var(--color-fondo);
+}
+
+/* Días de la Semana */
+.dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 0.5rem;
+  height: auto;
+}
+
+.dias div {
+  color: var(--color-fondo);
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-principal);
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  box-sizing: border-box;
+  text-shadow: 2px 2px 0px var(--color-secundario);
+}
+
+/* Fechas del Mes */
+.fechas {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+  height: auto;
+}
+
+.fechas div {
+  color: var(--color-principal);
+  cursor: pointer;
+  padding: 0.5rem;
+  background-color: rgba(255, 242, 226, 0.7);
+  transition: background-color 0.2s ease-in-out, transform 0.3s ease-in-out;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  text-shadow: 1px 1px 0px var(--color-fondo);
+}
+
+.fechas div:hover {
+  background-color: rgba(205, 181, 158, 0.9); /* Oscurecer al pasar el cursor */
+  transform: scale(1.05);
+}
+
+.fechas div.seleccionado {
+  background-color: rgba(205, 181, 158, 0.9); /* Mantener oscuro al seleccionar */
+  color: var(--color-fondo); /* Texto blanco para contraste */
+  text-shadow: 1px 1px 0px var(--color-principal);
+}
+
+.fechas div.hoy {
+  background-color: #fbc02d !important; /* Asegurar prioridad */
+  color: var(--color-principal) !important; /* Asegurar prioridad */
+  text-shadow: 1px 1px 0px var(--color-fondo) !important; /* Asegurar prioridad */
+}
+
+/* Estilo para los días con notas */
+.fechas div.con-notas {
+  color: red;
+  text-shadow: none; /* Evitar sombra en el indicador de nota */
+}
+
+/* Mostrar Fecha Seleccionada (Notas) */
+#mostrar-fecha {
+  color: var(--color-principal);
+  font-size: 0.85rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+  width: 80%;
+  box-sizing: border-box;
+  text-shadow: 1px 1px 0px var(--color-fondo);
+}
+
+/* Área de Notas */
+#area-notas {
+  width: 80%;
+  height: calc(100% - 3.5rem); /* Ajustar la altura para el botón */
+  background-color: transparent;
+  border: none;
+  padding: 0.75rem;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 0.75rem;
+  resize: none;
+  color: var(--color-principal);
+  outline: none;
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+  margin-bottom: 0.5rem; /* Espacio para el botón */
+  text-shadow: 1px 1px 0px var(--color-fondo);
+}
+
+/* Botón Guardar Nota */
+#guardar-nota-btn {
+  background-color: var(--color-secundario);
+  color: var(--color-fondo);
+  border: 2px solid var(--color-principal);
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.7rem;
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+  width: 80%;
+  box-sizing: border-box;
+  box-shadow: 4px 4px 0px var(--color-principal);
+  text-shadow: 1px 1px 0px var(--color-fondo);
+}
+
+#guardar-nota-btn:hover {
+  background-color: #8c291d; /* Oscurecer al pasar el cursor */
+  box-shadow: 2px 2px 0px var(--color-principal);
+  transform: translate(2px, 2px); /* Efecto de "presionado" */
+}
+
+#guardar-nota-btn.guardado {
+  background-color: #28a745; /* Un color verde para indicar éxito */
+  box-shadow: 2px 2px 0px var(--color-principal);
+  transform: translate(1px, 1px);
+}
+
+/* Contenedor de Autenticación */
+#auth-container {
+  position: absolute;
+  top: 25%; /* Ajustado para centrar verticalmente mejor */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 20;
+  border: 2px solid var(--color-principal); /* Borde principal */
+  box-shadow: 4px 4px 0px var(--color-secundario); /* Sombra pixelada */
+}
+
+#auth-container h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  color: var(--color-principal);
+  text-shadow: 2px 2px 0px var(--color-fondo); /* Sombra de texto */
+}
+
+#registro-form,
+#login-form {
+  display: block;
+  margin-bottom: 15px;
+  width: 80%; /* Ajustar ancho */
+  max-width: 300px; /* Ancho máximo */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#login-form {
+  display: none;
+}
+
+#auth-container input[type="text"],
+#auth-container input[type="password"] {
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 2px solid var(--color-principal);
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 0.8rem;
+  background-color: var(--color-fondo);
+  color: var(--color-principal);
+  box-shadow: 2px 2px 0px var(--color-secundario); /* Sombra pixelada */
+  text-shadow: 1px 1px 0px var(--color-fondo);
+}
+
+#auth-container input[type="text"]:focus,
+#auth-container input[type="password"]:focus {
+  outline: none;
+  border-color: var(--color-secundario);
+  box-shadow: 2px 2px 0px var(--color-principal); /* Sombra invertida al enfocar */
+}
+
+#auth-container button {
+  background-color: var(--color-secundario);
+  color: var(--color-fondo);
+  padding: 10px 15px;
+  border: 2px solid var(--color-principal);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: inherit;
+  box-shadow: 4px 4px 0px var(--color-principal); /* Sombra pixelada más marcada */
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+  width: 100%;
+  box-sizing: border-box;
+  text-shadow: 1px 1px 0px var(--color-fondo);
+}
+
+#auth-container button:hover {
+  background-color: #8c291d; /* Oscurecer al pasar el cursor */
+  box-shadow: 2px 2px 0px var(--color-principal);
+  transform: translate(2px, 2px); /* Efecto de "presionado" */
+}
+
+#auth-container a {
+  color: var(--color-secundario);
+  text-decoration: none;
+  font-size: 0.8rem;
+  text-shadow: 1px 1px 0px var(--color-fondo); /* Sombra de texto */
+}
+
+#auth-container a:hover {
+  text-decoration: underline;
+}
+
+#registro-mensaje,
+#login-mensaje {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #dc3545;
+  text-align: center;
+  text-shadow: 1px 1px 0px var(--color-fondo); /* Sombra de texto */
+}
+
+#registro-mensaje.success,
+#login-mensaje.success {
+  color: #28a745;
+  text-shadow: 1px 1px 0px var(--color-fondo); /* Sombra de texto */
+}
+
+#login-form p,
+#registro-form p {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--color-principal);
+  text-shadow: 1px 1px 0px var(--color-fondo); /* Sombra de texto */
+}
+
+.color-botones-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 30; /* Asegurar que estén por encima del libro */
+}
+
+.color-boton {
+  width: auto; /* Ajustar al contenido */
+  height: auto;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 2px solid var(--color-principal);
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--color-secundario);
+  transition: transform 0.2s ease-in-out;
+  font-family: inherit;
+  font-size: 0.7rem;
+  color: var(--color-principal);
+  background-color: var(--color-fondo);
+  text-shadow: 1px 1px 0px var(--color-secundario);
+}
+
+.color-boton:hover {
+  transform: scale(1.05);
+  background-color: rgba(255, 242, 226, 0.8);
+}
+
+/* Clases para los días con diferentes colores de nota */
+.fecha-nota-azul {
+  background-color: #4fc1e9 !important;
+  color: var(--color-fondo) !important;
+  text-shadow: 1px 1px 0px var(--color-principal);
+}
+
+.fecha-nota-verde {
+  background-color: #a0d468 !important;
+  color: var(--color-principal) !important;
+  text-shadow: 1px 1px 0px var(--color-fondo);
+}
+
+.fecha-nota-rojo {
+  background-color: #ed5565 !important;
+  color: var(--color-fondo) !important;
+  text-shadow: 1px 1px 0px var(--color-fondo);
+}
